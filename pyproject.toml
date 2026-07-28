@@ -1,0 +1,15 @@
+[project]
+name = "challenge-agente-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faiss-cpu>=1.14.3",
+    "fastapi[standard]>=0.140.7",
+    "langgraph>=1.2.9",
+    "numpy>=2.5.1",
+    "pymupdf>=1.28.0",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
+]
