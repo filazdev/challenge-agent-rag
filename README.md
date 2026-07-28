@@ -20,6 +20,7 @@ No responde sobre: front-end, recursos humanos, beneficios, onboarding, o temas 
 
 ## 📐 Arquitectura de la solución
 
+```
 Usuario (Interfaz HTML)
         │
         ▼
@@ -36,11 +37,12 @@ Usuario (Interfaz HTML)
         ▼
    RAG Pipeline
         │
-        ├── Carga de PDFs (PyMuPDF)
-        ├── Chunking (400 caracteres, overlap 40)
-        ├── Embeddings (SiliconFlow / Qwen3-Embedding-0.6B)
-        ├── Índice FAISS (búsqueda de similitud)
-        └── Generación de respuesta (DeepSeek Chat)
+        ├── 1. Carga de PDFs (PyMuPDF)
+        ├── 2. Chunking (400 caracteres, overlap 40)
+        ├── 3. Embeddings (SiliconFlow / Qwen3-Embedding-0.6B)
+        ├── 4. Índice FAISS (búsqueda de similitud)
+        └── 5. Generación de respuesta (DeepSeek Chat)
+```
 
 ---
 
@@ -63,30 +65,33 @@ Usuario (Interfaz HTML)
 ## 🚀 Instrucciones para ejecutar localmente
 
 ### 1. Clonar el repositorio
+```
 git clone <URL_DEL_REPO>
 cd challenge_agente_rag
-
+```
 ### 2. Crear y activar entorno virtual (con uv)
+```bash
 uv venv
 source .venv/bin/activate   # Linux/Mac
 # .venv\Scripts\activate    # Windows
-
+```
 ### 3. Instalar dependencias
 uv pip install -r requirements.txt
 
 ### 4. Configurar variables de entorno
 Crea un archivo .env en la raíz del proyecto:
+```
 SILICONFLOW_API_KEY=tu_api_key_de_siliconflow
 DEEPSEEK_API_KEY=tu_api_key_de_deepseek
 DOCS_PATH=./docs
-
+```
 ### 5. Colocar los documentos PDF
 Crea una carpeta docs/ y coloca dentro los PDFs (ej. Guia_Backend.pdf, Protocolo_Incidentes.pdf).
 
 ### 6. Ejecutar la aplicación
 python main.py
 
-La aplicación estará disponible en http://localhost:8080
+#### La aplicación está disponible para prueba en:  [https://challenge-agent-rag.onrender.com](https://challenge-agent-rag.onrender.com)
 
 ---
 
@@ -107,29 +112,31 @@ La aplicación estará disponible en http://localhost:8080
 
 ## 💬 Ejemplos de respuestas generadas
 
-Pregunta: ¿Cuál es el protocolo para incidentes críticos?
+**Pregunta: ¿Cuál es el protocolo para incidentes críticos?**
 
 Respuesta:
-El protocolo para incidentes críticos (SEV-1) incluye un checklist rápido que debe seguirse:
-1. Reconocer alerta en PagerDuty (< 5 min)
-2. Confirmar el incidente en Datadog/Prometheus
-3. Declarar el incidente en #incidents
-4. IC asigna roles (TL, CL, SMEs)
-5. Abrir #sev1-war-room en Slack
-6. Abrir documento de timeline
-7. CL publica primera actualización en #incidents
-8. TL inicia diagnóstico (último deploy, RDS, ECS)
-9. IC aprueba acción de mitigación
-10. TL ejecuta mitigación / rollback
-11. Monitorear métricas por 10 minutos
-12. IC declara resolución
-13. CL publica comunicado de resolución
-14. IC abre ticket de Post-Mortem (< 48h)
+Basado en el contexto proporcionado, el protocolo para incidentes críticos incluye:
 
-Pregunta: ¿Qué es el Error Budget?
+1. **Checklist Rápido para SEV-1** (Apéndice B):
+   - Reconocer alerta en PagerDuty (< 5 min)
+   - Confirmar el incidente en Datadog/Prometheus
+   - Declarar el incidente en #incidents
+   - IC asigna roles
+
+2. **Proceso de Respuesta Inicial (T+0 a T+5 minutos)**:
+   - Engineer On-Call publica mensaje inicial en `#incidents`
+   - Incident Commander (IC) recibe notificación vía PagerDuty y asume el comando
+   - IC declara formalmente el incidente con severidad inicial
+   - IC crea el canal de War Room correspondiente
+
+3. **Criterios de Escalada**: La severidad de un incidente puede y debe ser revisada durante su ciclo de vida.
+
+4. **Post-Mortem**: Toda causa raíz identificada debe resultar en acciones correctivas concretas, documentadas en la plantilla oficial de Post-Mortem.
+
+**Pregunta: ¿Qué es el Error Budget?**
 
 Respuesta:
-El Error Budget (presupuesto de errores) es la cantidad máxima de indisponibilidad o degradación que Santo Pegasus puede "gastar" en un período determinado (normalmente mensual) sin violar el SLO establecido. Es el mecanismo que define el equilibrio entre la velocidad de entrega de nuevas funcionalidades y la necesidad de mantener la estabilidad del sistema.
+Según el contexto proporcionado, el Error Budget (presupuesto de errores) es la cantidad máxima de indisponibilidad o degradación que Santo Pegasus puede "gastar" en un período determinado (normalmente mensual) sin violar el SLO establecido. Es el mecanismo que define el equilibrio entre la velocidad de entrega de nuevas funcionalidades y la necesidad de mantener la estabilidad del sistema.
 
 ---
 
@@ -140,7 +147,7 @@ El Error Budget (presupuesto de errores) es la cantidad máxima de indisponibili
 2. Conectar repositorio de GitHub
 3. Crear Web Service con:
    - Build Command: pip install -r requirements.txt
-   - Start Command: uvicorn main:app --host 0.0.0.0 --port 10000
+   - Start Command: fastapi run main.py | uvicorn main:app --host 0.0.0.0 --port 10000
 4. Añadir variables de entorno en el panel de Render
 
 ### Alternativas
@@ -148,9 +155,14 @@ El Error Budget (presupuesto de errores) es la cantidad máxima de indisponibili
 - Railway: similar a Render
 
 ---
+## 📸 Evidencia de despliegue
+
+![Interfaz del agente en producción](screenshot.png)
+
+---
 
 ## 📁 Estructura del proyecto
-
+```
 challenge_agente_rag/
 ├── docs/               # PDFs fuente
 ├── main.py             # Código principal
@@ -158,7 +170,7 @@ challenge_agente_rag/
 ├── .env                # Variables (no subir)
 ├── .gitignore          # Ignorar .env, __pycache__, .venv
 └── README.md           # Este archivo
-
+```
 ---
 
 ## ⚙️ Requisitos del sistema
