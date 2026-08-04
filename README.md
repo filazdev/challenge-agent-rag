@@ -181,4 +181,4 @@ challenge_agente_rag/
 
 ---
 
-**Proyecto desarrollado para el Challenge Alura**
+**Proyecto desarrollado para el Challenge Alura / Oracle One**
